@@ -60,5 +60,7 @@ if __name__ == '__main__':
 
     test1 = TruthTable("Test1", conditions)
 
+    rule = '@c3 = @c1 or @c3'
+
     for row in test1:
         print(row)
