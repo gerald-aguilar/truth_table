@@ -1,4 +1,5 @@
 import itertools
+import re
 from collections import namedtuple
 
 class TruthTable(object):
@@ -55,12 +56,65 @@ class TruthTable(object):
         n2_conditions = [0, self._num_conditions-1, self._num_conditions]
         return [self._convert_to_bools(row) for row in truth_table if sum(row) in n2_conditions]
 
+
+    def apply_rules(self, rules):
+        for rule in rules:
+            for i, row in enumerate(self._table):
+                lhs, rhs = self._parse(rule)
+                new_value_expr = self._rule_string(rhs)
+                value = eval(new_value_expr)
+
+                # make the update
+                update_expr = self._replace_string(lhs, value)
+                self._table[i] = eval(update_expr)
+
+
+    @classmethod
+    def _replace_string(cls, condition, value):
+        expr = 'row._replace({}={})'
+
+        return expr.format(condition, value)
+
+    @classmethod
+    def _rule_string(cls, expr):
+        get_attr = "getattr(row, '{}')"
+        
+        condition_names = re.findall(r'@(\w+)', expr)
+        condition_variable_names = re.findall(r'@\w+', expr)
+        condition_dict = {key: get_attr.format(value) for key, value in zip(condition_variable_names, condition_names)}
+    
+        expr = re.sub(r'@\w+', lambda match: condition_dict[match.group()], expr)
+
+        return expr
+
+    def _parse(self, rule):
+        lhs, rhs = rule.split('=')
+        rhs = rhs.lstrip().rstrip()
+        lhs = lhs.replace('@', '').lstrip().rstrip()
+
+        return lhs, rhs
+        
+
+def print_table(table):        
+    print('*'*65)
+    for row in table:
+        print(row)
+    print('*'*65, '\n')
+
 if __name__ == '__main__':
     conditions = ['c0', 'c1', 'c2', 'c3', 'result']
 
     test1 = TruthTable("Test1", conditions)
+    print_table(test1)
+    
+    
+    rules = ['@c3 = @c1 and @c2',]
+    test1.apply_rules(rules)
+    print_table(test1)
 
-    rule = '@c3 = @c1 or @c3'
+    # TODO: apply the update BEFORE creating the table of Rows
+    #       otherwise the result might not be correct
 
-    for row in test1:
-        print(row)
+    # TODO: add functionality for excluding rows matching certain conditions
+
+    # TODO: doc strings!
