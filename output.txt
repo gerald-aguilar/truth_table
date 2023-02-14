@@ -1,0 +1,18 @@
+[Running] python -u "./truth_table/truth_table.py"
+*****************************************************************
+Test1(c0=False, c1=False, c2=False, c3=False, result=False)
+Test1(c0=False, c1=True, c2=True, c3=True, result=False)
+Test1(c0=True, c1=False, c2=True, c3=True, result=False)
+Test1(c0=True, c1=True, c2=False, c3=True, result=False)
+Test1(c0=True, c1=True, c2=True, c3=False, result=False)
+Test1(c0=True, c1=True, c2=True, c3=True, result=True)
+***************************************************************** 
+
+*****************************************************************
+Test1(c0=False, c1=False, c2=False, c3=False, result=False)
+Test1(c0=False, c1=True, c2=True, c3=True, result=False)
+Test1(c0=True, c1=False, c2=True, c3=False, result=False)
+Test1(c0=True, c1=True, c2=False, c3=False, result=False)
+Test1(c0=True, c1=True, c2=True, c3=True, result=False)
+Test1(c0=True, c1=True, c2=True, c3=True, result=True)
+***************************************************************** 
